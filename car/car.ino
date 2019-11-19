@@ -72,18 +72,28 @@ void loop() {
 
   tcs.getRawData(&r, &g, &b, &c);
   uint8_t data[DATA_LENGTH];
-if (data[0]>510)
-  data[0]=255;
- else
-  data[0]=r/2; //dividing by 2 to make most common values below 1 byte, actual gain is x30
- if (data[1]>510)
-  data[1]=255;
- else
-  data[1]=g/2;
- if (data[2]>510)
-  data[2]=255;
- else
-  data[2]=b/2;
+  float correctionFactor;
+  if ((r>=g) and (r>=b))
+  {
+    correctionFactor = ((float)r)/255;
+    
+    }
+    else
+    {
+        if ((g>=r) and (g>=b))
+        {
+          correctionFactor = ((float)g)/255;
+        }
+        else
+        {
+          correctionFactor = ((float)b)/255;
+        }
+    }
+  data[0]=r/correctionFactor; //dividing by 2 to make most common values below 1 byte, actual gain is x30
+
+  data[1]=g/correctionFactor;
+
+  data[2]=b/correctionFactor;
   
   data[3]=0;
   data[4]=0;
