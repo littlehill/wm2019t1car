@@ -8,8 +8,8 @@
 #include <ArduinoBLE.h>
 
 #define DATA_LENGTH 6
-#define UUID_car "19b10000-e8f2-537e-4f6c-d104768a1220"
-#define UUID_huge "19b10001-e8f2-537e-4f6c-d104768a1220"
+#define UUID_car "19b10000-e8f2-537e-4f6c-d104768a1218"
+#define UUID_huge "19b10001-e8f2-537e-4f6c-d104768a1218"
 
 BLEService ledService(UUID_car); // create service
 
@@ -18,7 +18,7 @@ BLEByteCharacteristic switchCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1215
 BLECharacteristic hugeChar(UUID_huge, BLERead | BLEWrite , DATA_LENGTH, true);
 
 const int ledPin = LED_BUILTIN; // pin to use for the LED
-Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_700MS, TCS34725_GAIN_1X);
+Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_2_4MS , TCS34725_GAIN_60X );
 
 void setup() {
   Serial.begin(115200);
@@ -72,10 +72,19 @@ void loop() {
 
   tcs.getRawData(&r, &g, &b, &c);
   uint8_t data[DATA_LENGTH];
-
-  data[0]=r;
-  data[1]=g;
-  data[2]=b;
+if (data[0]>510)
+  data[0]=255;
+ else
+  data[0]=r/2; //dividing by 2 to make most common values below 1 byte, actual gain is x30
+ if (data[1]>510)
+  data[1]=255;
+ else
+  data[1]=g/2;
+ if (data[2]>510)
+  data[2]=255;
+ else
+  data[2]=b/2;
+  
   data[3]=0;
   data[4]=0;
   data[5]=0;
