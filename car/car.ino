@@ -9,12 +9,13 @@
 
 #define DATA_LENGTH 6
 #define UUID_car "19b10000-e8f2-537e-4f6c-d104768a1220"
+#define UUID_huge "19b10001-e8f2-537e-4f6c-d104768a1220"
 
 BLEService ledService(UUID_car); // create service
 
 // create switch characteristic and allow remote device to read and write
 BLEByteCharacteristic switchCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1215", BLERead | BLEWrite);
-BLECharacteristic hugeChar(UUID_car, BLERead | BLEWrite , DATA_LENGTH, true);
+BLECharacteristic hugeChar(UUID_huge, BLERead | BLEWrite , DATA_LENGTH, true);
 
 const int ledPin = LED_BUILTIN; // pin to use for the LED
 Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_700MS, TCS34725_GAIN_1X);
@@ -40,7 +41,7 @@ void setup() {
   }
 
   // set the local name peripheral advertises
-  BLE.setLocalName("LEDCallback");
+  BLE.setLocalName("T800_RED");
   // set the UUID for the service this peripheral advertises
   BLE.setAdvertisedService(ledService);
 
